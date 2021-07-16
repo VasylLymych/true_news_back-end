@@ -1,0 +1,23 @@
+{
+  "name": "back-end",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VasylLymych/true_news_back-end.git"
+  },
+  "author": "Vasyl Lymych",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VasylLymych/true_news_back-end/issues"
+  },
+  "homepage": "https://github.com/VasylLymych/true_news_back-end#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.13.2"
+  }
+}
