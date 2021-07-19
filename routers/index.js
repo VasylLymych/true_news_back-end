@@ -1,0 +1,1 @@
+module.exports.newsRouter = require("./newsRouter")

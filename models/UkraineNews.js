@@ -9,14 +9,18 @@ const UkraineNewsSchema = new Schema({
     },
     image: {
         type: String,
-        required: true
+        required: false
     },
     description: {
+        type: String,
+        required: true
+    },
+    date: {
         type: String,
         required: true
     }
 });
 
-module.exports = mongoose.model("UkraineNews", UkraineNewsSchema)
+module.exports = mongoose.model("ukraine_news", UkraineNewsSchema)
 
 

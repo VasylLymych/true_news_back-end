@@ -9,12 +9,16 @@ const worldNewsSchema = new Schema({
     },
     image: {
         type: String,
-        required: true
+        required: false
     },
     description: {
+        type: String,
+        required: true
+    },
+    date: {
         type: String,
         required: true
     }
 });
 
-module.exports = mongoose.model("worldNews", worldNewsSchema)
+module.exports = mongoose.model("world_news", worldNewsSchema)
