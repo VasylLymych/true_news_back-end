@@ -7,9 +7,9 @@ const worldNewsSchema = new Schema({
         type: String,
         required: true
     },
-    image: {
+    photo: {
         type: String,
-        required: false
+        required: true
     },
     description: {
         type: String,

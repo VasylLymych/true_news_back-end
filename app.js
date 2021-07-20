@@ -1,7 +1,8 @@
 const express = require("express");
 const http = require("http");
 const mongoose = require("mongoose");
-const cors = require("cors")
+const cors = require("cors");
+const Siofu = require("socketio-file-upload");
 const {addUkraineNewsItemService, addWorldNewsItemService} = require("./services")
 const {newsRouter} = require("./routers")
 
@@ -16,22 +17,49 @@ app.use(cors())
 app.use(express.urlencoded({
     extended: true
 }));
-app.use('/news', newsRouter)
+app.use(Siofu.router);
+app.use('/news', newsRouter);
 
 const server = http.createServer(app);
 const io = require("socket.io")(server);
 
 io.on('connect', socket => {
+    let uploader = new Siofu();
+    uploader.listen(socket);
+    uploader.dir = "./images";
+    let currentNewsItem = {category: "", newsItem: null};
+
+    uploader.on("saved", async event => {
+        currentNewsItem.newsItem.photo = event.file.pathName;
+
+        if (currentNewsItem.category === "UkraineNews") {
+
+            await addUkraineNewsItemService(currentNewsItem.newsItem);
+
+            io.emit("UkraineNewsItemAdded");
+
+            currentNewsItem = {};
+        }
+        if (currentNewsItem.category === "worldNews") {
+
+            await addWorldNewsItemService(currentNewsItem.newsItem);
+
+            io.emit("worldNewsItemAdded");
+
+            currentNewsItem = {};
+        }
+    });
     socket.on("addUkraineNewsItem", async data => {
-        data.date = new Date().toLocaleString()
-        await addUkraineNewsItemService(data)
-        io.emit("UkraineNewsItemAdded")
-    })
+        data.date = new Date().toLocaleString();
+        currentNewsItem.category = "UkraineNews";
+        currentNewsItem.newsItem = data;
+    });
     socket.on("addWorldNewsItem", async data => {
-        data.date = new Date().toLocaleString()
-        await addWorldNewsItemService(data)
-        io.emit("worldNewsItemAdded")
-    })
+        data.date = new Date().toLocaleString();
+        currentNewsItem.category = "worldNews";
+        currentNewsItem.newsItem = data;
+
+    });
     socket.on("disconnect", () => console.log("disconnected"))
 });
 
